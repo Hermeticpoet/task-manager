@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.config["MONGO_DBNAME"] = 'task_manager'
-app.config["MONGO_URI"] = os.getenv('MONGO_URI', 'mongodb://localhost')
+app.config["MONGO_URI"] = 'mongodb+srv://root:mongoDB2019@myfirstcluster-oyutj.mongodb.net/task_manager?retryWrites=true&w=majority'
 
 mongo = PyMongo(app)
 
@@ -85,6 +85,18 @@ def delete_category(category_id):
     return redirect(url_for('get_categories'))
 
 
+@app.route('/insert_category', methods=['POST'])
+def insert_category():
+    category_doc = {'category_name': request.form.get('category_name')}
+    mongo.db.categories.insert_one(category_doc)
+    return redirect(url_for('get_categories'))
+
+
+@app.route('/add_category')
+def add_category():
+    return render_template('addcategory.html')
+    
+    
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
             port=int(os.environ.get('PORT')),
